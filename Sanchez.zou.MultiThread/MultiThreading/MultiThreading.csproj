@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lesson_1\ThreadBackgroundDemo.cs" />
     <Compile Include="Lesson_1\ThreadBase.cs" />
     <Compile Include="Lesson_1\ThreadDemo.cs" />
     <Compile Include="Lesson_1\ThreadPriorityDemo.cs" />

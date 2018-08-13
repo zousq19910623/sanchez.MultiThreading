@@ -85,13 +85,32 @@ namespace MultiThreading
             //为了模拟该情形，设置ProcessorAffinity选项，让操作系统将所有的线程运行在单个CPU核心（第一个核心）上
             //现在结果完全不同，并且计算耗时将超过2Sb钟。这是因为CPU核心大部分时间
             //在运行高优先级的线程，只留给剩下的线程很少的时间来运行
-            WriteLine($"Current thread priority: {CurrentThread.Priority}");
-            WriteLine("running on all cores available");
-            ThreadRun.RunThreads();
-            Sleep(TimeSpan.FromSeconds(2));
-            WriteLine("running on a single core");
-            GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
-            ThreadRun.RunThreads();
+            //WriteLine($"Current thread priority: {CurrentThread.Priority}");
+            //WriteLine("running on all cores available");
+            //ThreadRun.RunThreads();
+            //Sleep(TimeSpan.FromSeconds(2));
+            //WriteLine("running on a single core");
+            //GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
+            //ThreadRun.RunThreads();
+
+            //lesson 7
+            //第1个线程完成后，程序结束并且后台线程被终结。
+            //这是前台线程与后台线程的主要区别：
+            //进程会等待所有的前台线程完成后再结束工作，但是如果只剩下后台线程，则会直接结束工作
+            //如果程序定义了一t不会完成的前台线程，主程序并不会正常结束。
+            var foreground = new ThreadBackgroundDemo(10);
+            var background = new ThreadBackgroundDemo(20);
+            var threadOne = new Thread(foreground.CountNumbers)
+            {
+                Name = "foregroundOne"
+            };
+            var threadTwo = new Thread(background.CountNumbers)
+            {
+                Name = "backgroundTwo",
+                IsBackground = true
+            };
+            threadOne.Start();
+            threadTwo.Start();
         }
     }
 }
