@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MultiThreading.Lesson_1;
 using static System.Console;
 using static System.Threading.Thread;
+using static System.Diagnostics.Process;
 
 namespace MultiThreading
 {
@@ -51,26 +52,46 @@ namespace MultiThreading
             //ThreadDemo.PrintNumbers();
 
             //lesson 5
+            //线程的不同状态
             //当主程序启动时定义了两个不同的线程。—个将被终止,另一个则会成功完成运行。
             //在一个周期为30次迭代的区间中, 线程状态会从 ThreadState.Running变为ThreadState.WaitSleepJoin
             //如果实际情况与以上不符,请增加迭代次数。
             //终止第一个线程后,会看到现在该线程状态为Aborted。程序也有可能会打印出AbortRequested状态。
-            WriteLine("Starting program...");
-            var t5 = new Thread(ThreadDemo.PrintNumbersWithStatus);
-            var t51 = new Thread(ThreadDemo.DoNothing);
-            WriteLine(t5.ThreadState.ToString());
-            t51.Start();
-            t5.Start();
-            for (var i = 1; i < 30; i++)
-            {
-                WriteLine(t5.ThreadState.ToString());
-            }
-            //主线程被暂停，ThreadState状态改变
-            Sleep(TimeSpan.FromSeconds(6));
-            t5.Abort();
-            WriteLine("a thread has been aborted ");
-            WriteLine(t5.ThreadState.ToString());
-            WriteLine(t51.ThreadState.ToString());
+            //WriteLine("Starting program...");
+            //var t5 = new Thread(ThreadDemo.PrintNumbersWithStatus);
+            //var t51 = new Thread(ThreadDemo.DoNothing);
+            //WriteLine(t5.ThreadState.ToString());
+            //t51.Start();
+            //t5.Start();
+            //for (var i = 1; i < 30; i++)
+            //{
+            //    WriteLine(t5.ThreadState.ToString());
+            //}
+            ////主线程被暂停，ThreadState状态改变
+            //Sleep(TimeSpan.FromSeconds(6));
+            //t5.Abort();
+            //WriteLine("a thread has been aborted ");
+            //WriteLine(t5.ThreadState.ToString());
+            //WriteLine(t51.ThreadState.ToString());
+
+            //lesson 6
+            //线程优先级
+            //第一个线程优先级为ThreadPriority.Highest,即具有最高优先级。
+            //第二个线程优先级为ThreadPriority.Lowest,即具有最低优先级。
+            //我们先打印出主线程的优先级值，然后在所有可用的CPU核心上后动这两个线程
+            //如果拥有1个以上的计算核心，将在两秒钟内得到初步结果。
+            //最高优先级的线程通常会计算更多的迭代，但是两个值应该很接近。
+            //然而，如果有其他程序占用了所有的CPU核心运行负载，结果则会截然不同。
+            //为了模拟该情形，设置ProcessorAffinity选项，让操作系统将所有的线程运行在单个CPU核心（第一个核心）上
+            //现在结果完全不同，并且计算耗时将超过2Sb钟。这是因为CPU核心大部分时间
+            //在运行高优先级的线程，只留给剩下的线程很少的时间来运行
+            WriteLine($"Current thread priority: {CurrentThread.Priority}");
+            WriteLine("running on all cores available");
+            ThreadRun.RunThreads();
+            Sleep(TimeSpan.FromSeconds(2));
+            WriteLine("running on a single core");
+            GetCurrentProcess().ProcessorAffinity = new IntPtr(1);
+            ThreadRun.RunThreads();
         }
     }
 }

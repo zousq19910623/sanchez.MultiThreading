@@ -42,7 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lesson_1\ThreadBase.cs" />
     <Compile Include="Lesson_1\ThreadDemo.cs" />
+    <Compile Include="Lesson_1\ThreadPriorityDemo.cs" />
+    <Compile Include="Lesson_1\ThreadRun.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
